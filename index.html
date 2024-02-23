@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <title>PotePost</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<header>
+    <nav class="nav-link">
+        <ul>
+            <li><a href="historique.html">Historique</a></li>
+        </ul>
+    </nav>
+</header>
+
+<body>
+    <section class="page-content">
+        <p>Pote Post est là pour vous aider !</p>
+        <p id="packageIsArrived">Soyez tranquille, votre boîte aux lettre est vide.</p>
+    </section>
+</body>
+
+<script>
+    let textZone = document.getElementById("packageIsArrived");
+    // Suppression de la variable packageIsArrived n'est plus nécessaire ici
+
+    fetch('https://popoteapi.azurewebsites.net/last', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.weight > 0) {
+                console.log("package is arrived");
+                textZone.innerHTML = "Quelque chose vous attends dans la boite aux lettre !";
+            } else {
+                console.log("package is not arrived");
+                textZone.innerHTML = "Soyez tranquille, votre boîte aux lettre est vide.";
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            textZone.innerHTML = "Erreur lors de la récupération des informations de la boîte aux lettres.";
+        });
+</script>
+
+</html>

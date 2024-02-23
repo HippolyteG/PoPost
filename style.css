@@ -1,0 +1,18 @@
+body {
+    background-color: #dbeaff;
+}
+
+header {
+    background-color: #ffaa00;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.page-content {
+    background-color: #fcce72;
+    border-radius: 10px;
+    padding: 20px;
+    border: solid;
+    border-color: #003075;
+}

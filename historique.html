@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <title>PotePost</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<header>
+  <nav class="nav-link">
+    <ul>
+      <li><a href="index.html">Acceuil</a></li>
+    </ul>
+  </nav>
+</header>
+
+<body>
+  <section class="page-content">
+    <p>Historique des colis reçus</p>
+    <table id="colis">
+      <tr>
+        <th>Date de Livraison</th>
+        <th>Date de Retrait</th>
+        <th>Poids</th>
+
+      </tr>
+  </section>
+</body>
+
+<script>
+  fetch('https://popoteapi.azurewebsites.net/', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      var isArrived = false;
+      data.forEach(element => {
+        //if weight > 0 then the package is arrived
+        if (element.weight > 0) {
+          var table = document.getElementById("colis");
+          var row = table.insertRow(-1);
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          //insert id to cell2 to be able to update it later
+          cell2.id = element.date;
+          var cell3 = row.insertCell(2);
+          //format the date to be more readable
+          var date = new Date(element.date);
+          cell1.innerHTML = date.toLocaleDateString() + " " + date.toLocaleTimeString();
+          cell2.innerHTML = "En attente de retrait";
+          cell3.innerHTML = element.weight + "Kg";
+          isArrived = true;
+        }
+        //else the package has been retrait so we display the date of this element in the same row as the date of the package arrival
+        else {
+          //if weight element-1 is > 0 then we update the cell2 of the same row
+          if (isArrived == true) {
+            var cell = document.getElementById(data[data.indexOf(element) - 1].date);
+            var date = new Date(element.date);
+            cell.innerHTML = date.toLocaleDateString() + " " + date.toLocaleTimeString();
+            isArrived = false;
+          }
+        }
+      });
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    }
+    );
+</script>
+
+</html>
